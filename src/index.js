@@ -7,6 +7,7 @@ import {
 import chokidar from 'chokidar'
 
 import {
+  ensureDir,
   ensureFile
 } from 'fs-extra'
 
@@ -21,13 +22,19 @@ import debug from 'debug'
 const error = debug('minimserver:error')
 const log = debug('minimserver:log')
 
-const remove = (path) => (
+const removeAllM3UFromDestinationDir = (path) => (
   new Promise((resolve, reject) => {
     rimraf(path, (e) => (!e) ? resolve() : reject(e))
   })
 )
 
-const ensure = (filePath) => (
+const ensureDestinationDir = (path) => (
+  new Promise((resolve, reject) => {
+    ensureDir(path, (e) => (!e) ? resolve() : reject(e))
+  })
+)
+
+const ensureDestinationM3U = (filePath) => (
   new Promise((resolve, reject) => {
     ensureFile(filePath, (e) => (!e) ? resolve() : reject(e))
   })
@@ -35,50 +42,67 @@ const ensure = (filePath) => (
 
 export const rescan = (server) => (
   new Promise((resolve, reject) => {
-    exec(`curl -X POST -H "Content-Type: text/plain" http://${server} -d rescan`, (e, r) => (!e) ? resolve(r) : reject(e))
+    exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d rescan`, (e, r) => (!e) ? resolve(r) : reject(e))
   })
 )
 
 export const restart = (server) => (
   new Promise((resolve, reject) => {
-    exec(`curl -X POST -H "Content-Type: text/plain" http://${server} -d restart`, (e, r) => (!e) ? resolve(r) : reject(e))
+    exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d restart`, (e, r) => (!e) ? resolve(r) : reject(e))
   })
 )
 
 export const relaunch = (server) => (
   new Promise((resolve, reject) => {
-    exec(`curl -X POST -H "Content-Type: text/plain" http://${server} -d relaunch`, (e, r) => (!e) ? resolve(r) : reject(e))
+    exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d relaunch`, (e, r) => (!e) ? resolve(r) : reject(e))
   })
 )
 
 export const exit = (server) => (
   new Promise((resolve, reject) => {
-    exec(`curl -X POST -H "Content-Type: text/plain" http://${server} -d exit`, (e, r) => (!e) ? resolve(r) : reject(e))
+    exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d exit`, (e, r) => (!e) ? resolve(r) : reject(e))
   })
 )
 
-const createFactory = (origin, destination) => async (filePath) => {
-  const to = filePath.replace(origin, destination)
+function createFactory (origin, destination) {
+  return async function (filePath) {
+    const to = filePath.replace(origin, destination)
 
-  // log(to)
+    // log(to)
 
-  try {
-    await ensure(to)
-    await copyFile(filePath, to)
-  } catch (e) {
-    error(e)
+    try {
+      await ensureDestinationM3U(to)
+      await copyFile(filePath, to)
+    } catch (e) {
+      error(e)
+    }
   }
 }
 
-const unlinkFactory = (origin, destination) => async (filePath) => {
-  const to = filePath.replace(origin, destination)
+function unlinkFactory (origin, destination) {
+  return async function (filePath) {
+    const to = filePath.replace(origin, destination)
 
-  // log(to)
+    // log(to)
 
-  try {
-    await del(to, { force: true })
-  } catch (e) {
-    error(e)
+    try {
+      await del(to, { force: true })
+    } catch (e) {
+      error(e)
+    }
+  }
+}
+
+function rescanQueueFactory (server) {
+  let timeout
+
+  return function () {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(async () => {
+      const response = await rescan(server)
+
+      log('queue', response.trim())
+    }, 250)
   }
 }
 
@@ -90,10 +114,11 @@ export async function execute (origin, server, destination) {
 
     watcher = chokidar.watch(o, { ignored: /(^|[/\\])\../ })
 
-    await remove(d)
-
     const create = createFactory(o, d)
     const unlink = unlinkFactory(o, d)
+
+    await ensureDestinationDir(d)
+    await removeAllM3UFromDestinationDir(d)
 
     watcher
       .on('add', create)
@@ -105,56 +130,38 @@ export async function execute (origin, server, destination) {
           .off('change', create)
           .off('unlink', unlink)
 
-        let t
+        const rescanQueue = rescanQueueFactory(server)
+
+        watcher
+          .on('add', async (filePath) => {
+            try {
+              await create(filePath)
+              rescanQueue()
+            } catch (e) {
+              error(e)
+            }
+          })
+          .on('change', async (filePath) => {
+            try {
+              await create(filePath)
+              rescanQueue()
+            } catch (e) {
+              error(e)
+            }
+          })
+          .on('unlink', async (filePath) => {
+            try {
+              await unlink(filePath)
+              rescanQueue()
+            } catch (e) {
+              error(e)
+            }
+          })
 
         try {
           const response = await rescan(server)
 
           log(response.trim())
-
-          watcher
-            .on('add', async (filePath) => {
-              try {
-                await create(filePath)
-
-                if (t) clearTimeout(t)
-                t = setTimeout(async () => {
-                  const response = await rescan(server)
-
-                  log('add', response.trim())
-                }, 250)
-              } catch (e) {
-                error(e)
-              }
-            })
-            .on('change', async (filePath) => {
-              try {
-                await create(filePath)
-
-                if (t) clearTimeout(t)
-                t = setTimeout(async () => {
-                  const response = await rescan(server)
-
-                  log('change', response.trim())
-                }, 250)
-              } catch (e) {
-                error(e)
-              }
-            })
-            .on('unlink', async (filePath) => {
-              try {
-                await unlink(filePath)
-
-                if (t) clearTimeout(t)
-                t = setTimeout(async () => {
-                  const response = await rescan(server)
-
-                  log('unlink', response.trim())
-                }, 250)
-              } catch (e) {
-                error(e)
-              }
-            })
         } catch (e) {
           error(e)
         }

@@ -1,6 +1,6 @@
 {
   "name": "@sequencemedia/minimserver",
-  "description": "Watch and rescan MinimServer",
+  "description": "Watch for changes to M3Us and rescan MinimServer",
   "version": "0.0.1",
   "main": "app.js",
   "scripts": {
