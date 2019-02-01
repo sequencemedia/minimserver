@@ -4,8 +4,6 @@ import {
   exec
 } from 'child_process'
 
-import chokidar from 'chokidar'
-
 import {
   ensureDir,
   ensureFile
@@ -15,6 +13,7 @@ import {
   copyFile
 } from 'sacred-fs'
 
+import chokidar from 'chokidar'
 import rimraf from 'rimraf'
 import del from 'del'
 import debug from 'debug'
@@ -68,8 +67,6 @@ function createFactory (origin, destination) {
   return async function (filePath) {
     const to = filePath.replace(origin, destination)
 
-    // log(to)
-
     try {
       await ensureDestinationM3U(to)
       await copyFile(filePath, to)
@@ -82,8 +79,6 @@ function createFactory (origin, destination) {
 function unlinkFactory (origin, destination) {
   return async function (filePath) {
     const to = filePath.replace(origin, destination)
-
-    // log(to)
 
     try {
       await del(to, { force: true })
