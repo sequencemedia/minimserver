@@ -10,6 +10,7 @@ import {
 } from 'fs-extra'
 
 import {
+  stat,
   copyFile
 } from 'sacred-fs'
 
@@ -20,6 +21,16 @@ import debug from 'debug'
 
 const error = debug('minimserver:error')
 const log = debug('minimserver:log')
+
+async function originDirExists (path) {
+  try {
+    await stat(path)
+    return true
+  } catch ({ code }) {
+    if (code !== 'ENOENT') error(code)
+    return false
+  }
+}
 
 const removeAllM3UFromDestinationDir = (path) => (
   new Promise((resolve, reject) => {
@@ -88,7 +99,7 @@ function unlinkFactory (origin, destination) {
   }
 }
 
-function rescanQueueFactory (server) {
+function queueRescanFactory (server) {
   let timeout
 
   return function () {
@@ -105,6 +116,9 @@ export async function execute (origin, destination, server) {
   let watcher
   try {
     const o = path.resolve(origin.replace('~', os.homedir))
+
+    if (!await originDirExists(o)) throw new Error(`Origin ${origin} does not exist.`)
+
     const d = path.resolve(destination.replace('~', os.homedir))
 
     watcher = chokidar.watch(o, { ignored: /(^|[/\\])\../ })
@@ -125,13 +139,13 @@ export async function execute (origin, destination, server) {
           .off('change', create)
           .off('unlink', unlink)
 
-        const rescanQueue = rescanQueueFactory(server)
+        const queueRescan = queueRescanFactory(server)
 
         watcher
           .on('add', async (filePath) => {
             try {
               await create(filePath)
-              rescanQueue()
+              queueRescan()
             } catch (e) {
               error(e)
             }
@@ -139,7 +153,7 @@ export async function execute (origin, destination, server) {
           .on('change', async (filePath) => {
             try {
               await create(filePath)
-              rescanQueue()
+              queueRescan()
             } catch (e) {
               error(e)
             }
@@ -147,7 +161,7 @@ export async function execute (origin, destination, server) {
           .on('unlink', async (filePath) => {
             try {
               await unlink(filePath)
-              rescanQueue()
+              queueRescan()
             } catch (e) {
               error(e)
             }
