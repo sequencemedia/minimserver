@@ -13,15 +13,15 @@ const { execute } = require('./src')
 const commander = require('commander')
 
 const app = async () => {
-  const error = debug('itunes-library:error')
+  const error = debug('minimserver:error')
 
   try {
     const {
       argv,
       env: {
         ORIGIN,
-        SERVER,
-        DESTINATION
+        DESTINATION,
+        SERVER
       }
     } = process
 
@@ -32,20 +32,20 @@ const app = async () => {
     commander
       .version(version)
       .option('-o, --origin [origin]', 'Origin path of M3Us')
-      .option('-s, --server [server]', 'IP address or hostname and port')
       .option('-d, --destination [destination]', 'Destination path for M3Us')
+      .option('-s, --server [server]', 'IP address or hostname and port')
       .parse(argv)
 
     const {
       origin = ORIGIN,
-      server = SERVER,
-      destination = DESTINATION
+      destination = DESTINATION,
+      server = SERVER
     } = commander
 
-    const error = debug('itunes-library:execute:error')
+    const error = debug('minimserver:execute:error')
 
     try {
-      await execute(origin, server, destination)
+      await execute(origin, destination, server)
     } catch (e) {
       error(e)
     }

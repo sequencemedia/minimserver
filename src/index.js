@@ -106,7 +106,7 @@ function rescanQueueFactory (server) {
   }
 }
 
-export async function execute (origin, server, destination) {
+export async function execute (origin, destination, server) {
   let watcher
   try {
     const o = path.resolve(origin.replace('~', os.homedir))
