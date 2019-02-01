@@ -13,18 +13,16 @@ const { execute } = require('./src')
 const commander = require('commander')
 
 const app = async () => {
-  const error = debug('minimserver:error')
+  const {
+    argv,
+    env: {
+      ORIGIN,
+      DESTINATION,
+      SERVER
+    }
+  } = process
 
   try {
-    const {
-      argv,
-      env: {
-        ORIGIN,
-        DESTINATION,
-        SERVER
-      }
-    } = process
-
     const {
       version
     } = JSON.parse(await readFile('./package.json', 'utf8'))
@@ -35,21 +33,23 @@ const app = async () => {
       .option('-d, --destination [destination]', 'Destination path for M3Us')
       .option('-s, --server [server]', 'IP address or hostname and port')
       .parse(argv)
+  } catch (e) {
+    const error = debug('minimserver:error')
 
-    const {
-      origin = ORIGIN,
-      destination = DESTINATION,
-      server = SERVER
-    } = commander
+    error(e)
+  }
 
+  const {
+    origin = ORIGIN,
+    destination = DESTINATION,
+    server = SERVER
+  } = commander
+
+  try {
+    await execute(origin, destination, server)
+  } catch (e) {
     const error = debug('minimserver:execute:error')
 
-    try {
-      await execute(origin, destination, server)
-    } catch (e) {
-      error(e)
-    }
-  } catch (e) {
     error(e)
   }
 }
