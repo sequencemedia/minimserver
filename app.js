@@ -23,10 +23,10 @@ const app = async () => {
   try {
     const s = await readFile('./package.json', 'utf8')
     p = JSON.parse(s)
-  } catch (e) {
+  } catch ({ message }) {
     const error = debug('minimserver:error')
 
-    error(e)
+    error(message)
   }
 
   const {
@@ -95,10 +95,10 @@ const app = async () => {
 
   try {
     await execute(origin, destination, server, ignore)
-  } catch (e) {
+  } catch ({ message }) {
     const error = debug('minimserver:execute:error')
 
-    error(e)
+    error(message)
   }
 }
 
