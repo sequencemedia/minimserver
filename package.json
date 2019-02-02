@@ -55,6 +55,7 @@
     "eslint-plugin-standard": "^4.0.0"
   },
   "dependencies": {
+    "anymatch": "^2.0.0",
     "chokidar": "^2.0.4",
     "commander": "^2.19.0",
     "cross-env": "^5.2.0",
@@ -62,6 +63,7 @@
     "del": "^3.0.0",
     "dotenv": "^6.2.0",
     "fs-extra": "^7.0.1",
+    "ps-list": "^6.1.0",
     "rimraf": "^2.6.3",
     "sacred-fs": "^1.0.5",
     "supports-color": "^6.1.0"

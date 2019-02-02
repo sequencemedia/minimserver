@@ -15,6 +15,7 @@ import {
 } from 'sacred-fs'
 
 import chokidar from 'chokidar'
+import anymatch from 'anymatch'
 import rimraf from 'rimraf'
 import del from 'del'
 import debug from 'debug'
@@ -26,8 +27,14 @@ async function originDirExists (path) {
   try {
     await stat(path)
     return true
-  } catch ({ code }) {
-    if (code !== 'ENOENT') error(code)
+  } catch ({ code, ...e }) {
+    if (code !== 'ENOENT') {
+      const {
+        message
+      } = e
+
+      error(message)
+    }
     return false
   }
 }
@@ -78,11 +85,13 @@ function createFactory (origin, destination) {
   return async function (filePath) {
     const to = filePath.replace(origin, destination)
 
+    log('create', to)
+
     try {
       await ensureDestinationM3U(to)
       await copyFile(filePath, to)
-    } catch (e) {
-      error(e)
+    } catch ({ message }) {
+      error(message)
     }
   }
 }
@@ -91,10 +100,12 @@ function unlinkFactory (origin, destination) {
   return async function (filePath) {
     const to = filePath.replace(origin, destination)
 
+    log('unlink', to)
+
     try {
       await del(to, { force: true })
-    } catch (e) {
-      error(e)
+    } catch ({ message }) {
+      error(message)
     }
   }
 }
@@ -112,16 +123,31 @@ function queueRescanFactory (server) {
   }
 }
 
-export async function execute (origin, destination, server) {
+function ignorePatternFactory (ignore) {
+  const ignorePatterns = ignore.split(',')
+
+  return function (filePath) {
+    return /(^|[/\\])\../.test(filePath) || anymatch(ignorePatterns, filePath)
+  }
+}
+
+export async function execute (
+  origin = '.',
+  destination = '.',
+  server = 'http://0.0.0.0:9790',
+  ignore = ''
+) {
   let watcher
+
   try {
     const o = path.resolve(origin.replace('~', os.homedir))
 
     if (!await originDirExists(o)) throw new Error(`Origin ${origin} does not exist.`)
 
     const d = path.resolve(destination.replace('~', os.homedir))
+    const ignorePattern = ignorePatternFactory(ignore)
 
-    watcher = chokidar.watch(o, { ignored: /(^|[/\\])\../ })
+    watcher = chokidar.watch(o, { ignored: ignorePattern })
 
     const create = createFactory(o, d)
     const unlink = unlinkFactory(o, d)
@@ -142,28 +168,28 @@ export async function execute (origin, destination, server) {
         const queueRescan = queueRescanFactory(server)
 
         watcher
-          .on('add', async (filePath) => {
+          .on('add', async function (filePath) {
             try {
               await create(filePath)
               queueRescan()
-            } catch (e) {
-              error(e)
+            } catch ({ message }) {
+              error(message)
             }
           })
-          .on('change', async (filePath) => {
+          .on('change', async function (filePath) {
             try {
               await create(filePath)
               queueRescan()
-            } catch (e) {
-              error(e)
+            } catch ({ message }) {
+              error(message)
             }
           })
-          .on('unlink', async (filePath) => {
+          .on('unlink', async function (filePath) {
             try {
               await unlink(filePath)
               queueRescan()
-            } catch (e) {
-              error(e)
+            } catch ({ message }) {
+              error(message)
             }
           })
 
@@ -171,13 +197,13 @@ export async function execute (origin, destination, server) {
           const response = await rescan(server)
 
           log(response.trim())
-        } catch (e) {
-          error(e)
+        } catch ({ message }) {
+          error(message)
         }
       })
-  } catch (e) {
+  } catch ({ message }) {
     if (watcher) watcher.close()
 
-    error(e)
+    error(message)
   }
 }
