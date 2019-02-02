@@ -4,19 +4,22 @@ require('@babel/register')
 
 require('dotenv/config')
 
-const psList = require('ps-list')
-
-const debug = require('debug')
-
 const {
   readFile
 } = require('sacred-fs')
+
+const debug = require('debug')
+
+const psList = require('ps-list')
 
 const {
   execute
 } = require('./src')
 
 const commander = require('commander')
+
+const NAME = 'ms.App'
+process.title = NAME
 
 const app = async () => {
   let p
@@ -32,9 +35,6 @@ const app = async () => {
   const {
     name
   } = p
-
-  const NAME = 'ms.App'
-  process.title = NAME
 
   /**
    *  Permit only one instance of the application
@@ -53,7 +53,7 @@ const app = async () => {
       throw new Error(`Application "${name}" has already started in process ${pid}.`)
     }
   } catch ({ message }) {
-    const error = debug('minimserver:error')
+    const error = debug('minimserver:process:error')
 
     error(message)
     return
