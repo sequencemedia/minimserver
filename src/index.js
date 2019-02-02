@@ -116,9 +116,13 @@ function queueRescanFactory (server) {
   return function () {
     if (timeout) clearTimeout(timeout)
     timeout = setTimeout(async () => {
-      const response = await rescan(server)
+      try {
+        const response = await rescan(server)
 
-      log('queue', response.trim())
+        log('queue', response.trim())
+      } catch ({ message }) {
+        error(message)
+      }
     }, 250)
   }
 }
