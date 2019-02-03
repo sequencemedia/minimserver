@@ -22,10 +22,10 @@ const NAME = 'ms.App'
 process.title = NAME
 
 const app = async () => {
-  let p
+  let PACKAGE
   try {
     const s = await readFile('./package.json', 'utf8')
-    p = JSON.parse(s)
+    PACKAGE = JSON.parse(s)
   } catch ({ message }) {
     const error = debug('minimserver:error')
 
@@ -34,7 +34,7 @@ const app = async () => {
 
   const {
     name
-  } = p
+  } = PACKAGE
 
   /**
    *  Permit only one instance of the application
@@ -80,13 +80,13 @@ const app = async () => {
 
   const {
     version
-  } = p
+  } = PACKAGE
 
   commander
     .version(version)
     .option('-o, --origin [origin]', 'Origin path of M3Us')
     .option('-d, --destination [destination]', 'Destination path for M3Us')
-    .option('-s, --server [server]', 'IP address or hostname, and port')
+    .option('-s, --server [server]', 'Protocol, IP address or hostname, and port')
     .option('-i, --ignore [ignore]', 'Glob pattern of files to ignore')
     .parse(argv)
 
