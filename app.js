@@ -50,7 +50,11 @@ const app = async () => {
         pid
       } = a.find(({ pid }) => pid !== PID)
 
-      throw new Error(`Application "${name}" has already started in process ${pid}.`)
+      const log = debug('minimserver:process:log')
+
+      log(`Killing application "${name}" in process ${pid}.`)
+
+      process.kill(pid)
     }
   } catch ({ message }) {
     const error = debug('minimserver:process:error')
