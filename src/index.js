@@ -123,7 +123,7 @@ function queueRescanFactory (server) {
       } catch ({ message }) {
         error(message)
       }
-    }, 250)
+    }, 9999)
   }
 }
 
@@ -159,52 +159,38 @@ export async function execute (
     await ensureDestinationDir(d)
     await removeAllM3UFromDestinationDir(d)
 
+    const queueRescan = queueRescanFactory(server)
+
     watcher
-      .on('add', create)
-      .on('change', create)
-      .on('unlink', unlink)
-      .on('ready', async () => {
-        watcher
-          .off('add', create)
-          .off('change', create)
-          .off('unlink', unlink)
-
-        const queueRescan = queueRescanFactory(server)
-
-        watcher
-          .on('add', async function (filePath) {
-            try {
-              await create(filePath)
-              queueRescan()
-            } catch ({ message }) {
-              error(message)
-            }
-          })
-          .on('change', async function (filePath) {
-            try {
-              await create(filePath)
-              queueRescan()
-            } catch ({ message }) {
-              error(message)
-            }
-          })
-          .on('unlink', async function (filePath) {
-            try {
-              await unlink(filePath)
-              queueRescan()
-            } catch ({ message }) {
-              error(message)
-            }
-          })
-
+      .on('add', async function (filePath) {
         try {
-          const response = await rescan(server)
+          await create(filePath)
 
-          log(response.trim())
+          queueRescan()
         } catch ({ message }) {
           error(message)
         }
       })
+      .on('change', async function (filePath) {
+        try {
+          await create(filePath)
+
+          queueRescan()
+        } catch ({ message }) {
+          error(message)
+        }
+      })
+      .on('unlink', async function (filePath) {
+        try {
+          await unlink(filePath)
+
+          queueRescan()
+        } catch ({ message }) {
+          error(message)
+        }
+      })
+
+    queueRescan()
   } catch ({ message }) {
     if (watcher) watcher.close()
 
