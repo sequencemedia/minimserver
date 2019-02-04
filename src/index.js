@@ -205,6 +205,9 @@ export async function execute (
           error(message)
         }
       })
+      .on('error', ({ message }) => {
+        error('Error in watcher', message)
+      })
 
     queueRescan()
   } catch ({ message }) {
