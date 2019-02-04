@@ -96,11 +96,26 @@ function createFactory (origin, destination) {
   }
 }
 
-function unlinkFactory (origin, destination) {
+function changeFactory (origin, destination) {
   return async function (filePath) {
     const to = filePath.replace(origin, destination)
 
-    log('unlink', to)
+    log('change', to)
+
+    try {
+      await ensureDestinationM3U(to)
+      await copyFile(filePath, to)
+    } catch ({ message }) {
+      error(message)
+    }
+  }
+}
+
+function removeFactory (origin, destination) {
+  return async function (filePath) {
+    const to = filePath.replace(origin, destination)
+
+    log('remove', to)
 
     try {
       await del(to, { force: true })
@@ -154,7 +169,8 @@ export async function execute (
     watcher = chokidar.watch(o, { ignored: ignorePattern })
 
     const create = createFactory(o, d)
-    const unlink = unlinkFactory(o, d)
+    const change = changeFactory(o, d)
+    const remove = removeFactory(o, d)
 
     await ensureDestinationDir(d)
     await removeAllM3UFromDestinationDir(d)
@@ -173,7 +189,7 @@ export async function execute (
       })
       .on('change', async function (filePath) {
         try {
-          await create(filePath)
+          await change(filePath)
 
           queueRescan()
         } catch ({ message }) {
@@ -182,7 +198,7 @@ export async function execute (
       })
       .on('unlink', async function (filePath) {
         try {
-          await unlink(filePath)
+          await remove(filePath)
 
           queueRescan()
         } catch ({ message }) {
