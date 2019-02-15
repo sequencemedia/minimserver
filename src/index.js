@@ -122,17 +122,35 @@ function removeFactory (origin, destination) {
 }
 
 function queueRescanFactory (server) {
-  let timeout = 0
+  let t = null
+  let x = null
+  let y = null
 
-  return function () {
-    if (timeout) clearTimeout(timeout)
-    timeout = setTimeout(async () => {
+  return function queue () {
+    if (t) {
+      clearTimeout(t)
+
+      if (x) {
+        y = true
+        return
+      }
+    }
+
+    t = setTimeout(async () => {
+      x = true
+
       try {
         const response = await rescan(server)
 
         log('queue', response.trim())
 
-        timeout = 0
+        t = null
+        x = null
+
+        if (y) {
+          y = null
+          queue()
+        }
       } catch ({ message }) {
         error(message)
       }
