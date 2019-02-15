@@ -16,8 +16,8 @@ import {
 
 import chokidar from 'chokidar'
 import anymatch from 'anymatch'
-import rimraf from 'rimraf'
 import del from 'del'
+
 import debug from 'debug'
 
 const error = debug('minimserver:error')
@@ -39,11 +39,7 @@ async function originDirExists (path) {
   }
 }
 
-const removeAllM3UFromDestinationDir = (path) => (
-  new Promise((resolve, reject) => {
-    rimraf(path, (e) => (!e) ? resolve() : reject(e))
-  })
-)
+const removeAllM3UFromDestinationDir = async (path) => del(path, { force: true })
 
 const ensureDestinationDir = (path) => (
   new Promise((resolve, reject) => {
@@ -126,7 +122,7 @@ function removeFactory (origin, destination) {
 }
 
 function queueRescanFactory (server) {
-  let timeout
+  let timeout = 0
 
   return function () {
     if (timeout) clearTimeout(timeout)
@@ -135,6 +131,8 @@ function queueRescanFactory (server) {
         const response = await rescan(server)
 
         log('queue', response.trim())
+
+        timeout = 0
       } catch ({ message }) {
         error(message)
       }

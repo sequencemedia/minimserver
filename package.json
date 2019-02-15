@@ -1,7 +1,7 @@
 {
   "name": "@sequencemedia/minimserver",
   "description": "Watch for changes to M3Us and rescan MinimServer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "app.js",
   "scripts": {
     "babel": "babel src -d lib",
@@ -64,7 +64,6 @@
     "dotenv": "^6.2.0",
     "fs-extra": "^7.0.1",
     "ps-list": "^6.1.0",
-    "rimraf": "^2.6.3",
     "sacred-fs": "^1.0.5",
     "supports-color": "^6.1.0"
   }
