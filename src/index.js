@@ -88,7 +88,7 @@ function createFactory (origin, destination) {
       await copyFile(filePath, to)
     } catch ({ code, ...e }) {
       if (code === 'ENOENT') {
-        error(`ENOENT in create for ${filePath}`)
+        error(`ENOENT in create for "${filePath}"`)
       } else {
         const {
           message
@@ -111,7 +111,7 @@ function changeFactory (origin, destination) {
       await copyFile(filePath, to)
     } catch ({ code, ...e }) {
       if (code === 'ENOENT') {
-        error(`ENOENT in change for ${filePath}`)
+        error(`ENOENT in change for "${filePath}"`)
       } else {
         const {
           message
