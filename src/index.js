@@ -86,8 +86,16 @@ function createFactory (origin, destination) {
     try {
       await ensureDestinationM3U(to)
       await copyFile(filePath, to)
-    } catch ({ message }) {
-      error(message)
+    } catch ({ code, ...e }) {
+      if (code === 'ENOENT') {
+        error(`ENOENT in create for ${filePath}`)
+      } else {
+        const {
+          message
+        } = e
+
+        error(message)
+      }
     }
   }
 }
@@ -101,8 +109,16 @@ function changeFactory (origin, destination) {
     try {
       await ensureDestinationM3U(to)
       await copyFile(filePath, to)
-    } catch ({ message }) {
-      error(message)
+    } catch ({ code, ...e }) {
+      if (code === 'ENOENT') {
+        error(`ENOENT in change for ${filePath}`)
+      } else {
+        const {
+          message
+        } = e
+
+        error(message)
+      }
     }
   }
 }
