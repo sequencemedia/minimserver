@@ -5,7 +5,8 @@ const presets = [
       useBuiltIns: 'usage',
       targets: {
         node: 'current'
-      }
+      },
+      corejs: 3
     }
   ]
 ]
