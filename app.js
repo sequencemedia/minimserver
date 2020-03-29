@@ -4,10 +4,6 @@ require('@babel/register')
 
 require('dotenv/config')
 
-const {
-  readFile
-} = require('sacred-fs')
-
 const debug = require('debug')
 
 const psList = require('ps-list')
@@ -18,20 +14,12 @@ const {
 
 const commander = require('commander')
 
+const PACKAGE = require('./package')
+
 const NAME = 'ms.App'
 process.title = NAME
 
 const app = async () => {
-  let PACKAGE
-  try {
-    const s = await readFile('./package.json', 'utf8')
-    PACKAGE = JSON.parse(s)
-  } catch ({ message }) {
-    const error = debug('minimserver:error')
-
-    error(message)
-  }
-
   const {
     name
   } = PACKAGE
