@@ -71,7 +71,7 @@ const app = async () => {
   } = PACKAGE
 
   commander
-    .version(version)
+    .version(version, '-v, --version', 'Version')
     .option('-o, --origin [origin]', 'Origin path of M3Us')
     .option('-d, --destination [destination]', 'Destination path for M3Us')
     .option('-s, --server [server]', 'Protocol, IP address or hostname, and port')
@@ -84,6 +84,13 @@ const app = async () => {
     server = SERVER,
     ignore = IGNORE
   } = commander
+
+  log({
+    origin,
+    destination,
+    server,
+    ...(ignore ? { ignore } : {})
+  })
 
   try {
     await execute(origin, destination, server, ignore)

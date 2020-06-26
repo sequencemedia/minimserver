@@ -27,7 +27,11 @@ async function originDirExists (path) {
   try {
     await stat(path)
     return true
-  } catch ({ code, ...e }) {
+  } catch (e) {
+    const {
+      code
+    } = e
+
     if (code !== 'ENOENT') {
       const {
         message
@@ -53,40 +57,67 @@ const ensureDestinationM3U = (filePath) => (
   })
 )
 
-export const rescan = (server) => (
-  new Promise((resolve, reject) => {
-    exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d rescan`, (e, r) => (!e) ? resolve(r) : reject(e))
-  })
-)
+export function rescan (server) {
+  /*
+   *  log('rescan')
+   */
+  return (
+    new Promise((resolve, reject) => {
+      exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d rescan`, (e, r) => (!e) ? resolve(r) : reject(e))
+    })
+  )
+}
 
-export const restart = (server) => (
-  new Promise((resolve, reject) => {
-    exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d restart`, (e, r) => (!e) ? resolve(r) : reject(e))
-  })
-)
+export function restart (server) {
+  /*
+   *  log('restart')
+   */
+  return (
+    new Promise((resolve, reject) => {
+      exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d restart`, (e, r) => (!e) ? resolve(r) : reject(e))
+    })
+  )
+}
 
-export const relaunch = (server) => (
-  new Promise((resolve, reject) => {
-    exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d relaunch`, (e, r) => (!e) ? resolve(r) : reject(e))
-  })
-)
+export function relaunch (server) {
+  /*
+   *  log('relaunch')
+   */
+  return (
+    new Promise((resolve, reject) => {
+      exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d relaunch`, (e, r) => (!e) ? resolve(r) : reject(e))
+    })
+  )
+}
 
-export const exit = (server) => (
-  new Promise((resolve, reject) => {
-    exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d exit`, (e, r) => (!e) ? resolve(r) : reject(e))
-  })
-)
+export function exit (server) {
+  /*
+   *  log('exit')
+   */
+  return (
+    new Promise((resolve, reject) => {
+      exec(`curl -X POST -H "Content-Type: text/plain" ${server} -d exit`, (e, r) => (!e) ? resolve(r) : reject(e))
+    })
+  )
+}
 
 function createFactory (origin, destination) {
-  return async function (filePath) {
+  /*
+   *  log('createFactory')
+   */
+  return async function create (filePath) {
     const to = filePath.replace(origin, destination)
 
     log('create', to)
 
     try {
       await ensureDestinationM3U(to)
-      await copyFile(filePath, to)
-    } catch ({ code, ...e }) {
+      return copyFile(filePath, to)
+    } catch (e) {
+      const {
+        code
+      } = e
+
       if (code === 'ENOENT') {
         error(`ENOENT in create for "${filePath}"`)
       } else {
@@ -101,15 +132,22 @@ function createFactory (origin, destination) {
 }
 
 function changeFactory (origin, destination) {
-  return async function (filePath) {
+  /*
+   *  log('changeFactory')
+   */
+  return async function change (filePath) {
     const to = filePath.replace(origin, destination)
 
     log('change', to)
 
     try {
       await ensureDestinationM3U(to)
-      await copyFile(filePath, to)
-    } catch ({ code, ...e }) {
+      return copyFile(filePath, to)
+    } catch (e) {
+      const {
+        code
+      } = e
+
       if (code === 'ENOENT') {
         error(`ENOENT in change for "${filePath}"`)
       } else {
@@ -124,13 +162,16 @@ function changeFactory (origin, destination) {
 }
 
 function removeFactory (origin, destination) {
-  return async function (filePath) {
+  /*
+   *  log('removeFactory')
+   */
+  return async function remove (filePath) {
     const to = filePath.replace(origin, destination)
 
     log('remove', to)
 
     try {
-      await del(to, { force: true })
+      return del(to, { force: true })
     } catch ({ message }) {
       error(message)
     }
@@ -138,11 +179,17 @@ function removeFactory (origin, destination) {
 }
 
 function queueRescanFactory (server) {
+  /*
+   *  log('queueRescanFactory')
+   */
   let t = null
   let x = null
   let y = null
 
-  return function queue () {
+  return function enqueue () {
+    /*
+     *  log('enqueue')
+     */
     if (t) {
       clearTimeout(t)
 
@@ -152,20 +199,23 @@ function queueRescanFactory (server) {
       }
     }
 
-    t = setTimeout(async () => {
+    t = setTimeout(async function dequeue () {
+      /*
+       *  log('dequeue')
+       */
       x = true
 
       try {
         const response = await rescan(server)
 
-        log('queue', response.trim())
+        log(response.trim())
 
         t = null
         x = null
 
         if (y) {
           y = null
-          queue()
+          enqueue()
         }
       } catch ({ message }) {
         error(message)
@@ -177,7 +227,7 @@ function queueRescanFactory (server) {
 function ignorePatternFactory (ignore) {
   const ignorePatterns = ignore.split(',')
 
-  return function (filePath) {
+  return function ignorePattern (filePath) {
     return /(^|[/\\])\../.test(filePath) || anymatch(ignorePatterns, filePath)
   }
 }
@@ -188,6 +238,9 @@ export async function execute (
   server = 'http://0.0.0.0:9790',
   ignore = ''
 ) {
+  /*
+   * log('execute')
+   */
   let watcher
 
   try {
@@ -210,7 +263,7 @@ export async function execute (
     const queueRescan = queueRescanFactory(server)
 
     watcher
-      .on('add', async function (filePath) {
+      .on('add', async function handleAdd (filePath) {
         try {
           await create(filePath)
 
@@ -219,7 +272,7 @@ export async function execute (
           error(message)
         }
       })
-      .on('change', async function (filePath) {
+      .on('change', async function handleChange (filePath) {
         try {
           await change(filePath)
 
@@ -228,7 +281,7 @@ export async function execute (
           error(message)
         }
       })
-      .on('unlink', async function (filePath) {
+      .on('unlink', async function handleUnlink (filePath) {
         try {
           await remove(filePath)
 
