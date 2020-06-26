@@ -1,7 +1,7 @@
 {
   "name": "@sequencemedia/minimserver",
   "description": "Watch for changes to M3Us and rescan MinimServer",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "main": "app.js",
   "scripts": {
     "babel": "babel src -d lib",
