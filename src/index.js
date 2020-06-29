@@ -101,7 +101,7 @@ export function exit (server) {
   )
 }
 
-function createFactory (origin, destination) {
+export function createFactory (origin, destination) {
   /*
    *  log('createFactory')
    */
@@ -131,7 +131,7 @@ function createFactory (origin, destination) {
   }
 }
 
-function changeFactory (origin, destination) {
+export function changeFactory (origin, destination) {
   /*
    *  log('changeFactory')
    */
@@ -161,7 +161,7 @@ function changeFactory (origin, destination) {
   }
 }
 
-function removeFactory (origin, destination) {
+export function removeFactory (origin, destination) {
   /*
    *  log('removeFactory')
    */
@@ -178,7 +178,7 @@ function removeFactory (origin, destination) {
   }
 }
 
-function queueRescanFactory (server) {
+export function queueRescanFactory (server) {
   /*
    *  log('queueRescanFactory')
    */
@@ -224,7 +224,99 @@ function queueRescanFactory (server) {
   }
 }
 
-function ignorePatternFactory (ignore) {
+export function queueRestartFactory (server) {
+  /*
+   *  log('queueRestartFactory')
+   */
+  let t = null
+  let x = null
+  let y = null
+
+  return function enqueue () {
+    /*
+     *  log('enqueue')
+     */
+    if (t) {
+      clearTimeout(t)
+
+      if (x) {
+        y = true
+        return
+      }
+    }
+
+    t = setTimeout(async function dequeue () {
+      /*
+       *  log('dequeue')
+       */
+      x = true
+
+      try {
+        const response = await restart(server)
+
+        log(response.trim())
+
+        t = null
+        x = null
+
+        if (y) {
+          y = null
+          enqueue()
+        }
+      } catch ({ message }) {
+        error(message)
+      }
+    }, 9999)
+  }
+}
+
+export function queueRelaunchFactory (server) {
+  /*
+   *  log('queueRelaunchFactory')
+   */
+  let t = null
+  let x = null
+  let y = null
+
+  return function enqueue () {
+    /*
+     *  log('enqueue')
+     */
+    if (t) {
+      clearTimeout(t)
+
+      if (x) {
+        y = true
+        return
+      }
+    }
+
+    t = setTimeout(async function dequeue () {
+      /*
+       *  log('dequeue')
+       */
+      x = true
+
+      try {
+        const response = await relaunch(server)
+
+        log(response.trim())
+
+        t = null
+        x = null
+
+        if (y) {
+          y = null
+          enqueue()
+        }
+      } catch ({ message }) {
+        error(message)
+      }
+    }, 9999)
+  }
+}
+
+export function ignorePatternFactory (ignore) {
   const ignorePatterns = ignore.split(',')
 
   return function ignorePattern (filePath) {
@@ -246,7 +338,7 @@ export async function execute (
   try {
     const o = path.resolve(origin.replace('~', os.homedir))
 
-    if (!await originDirExists(o)) throw new Error(`Origin ${origin} does not exist.`)
+    if (!await originDirExists(o)) throw new Error(`Origin "${origin}" does not exist.`)
 
     const d = path.resolve(destination.replace('~', os.homedir))
     const ignorePattern = ignorePatternFactory(ignore)
@@ -291,7 +383,7 @@ export async function execute (
         }
       })
       .on('error', ({ message }) => {
-        error('Error in watcher', message)
+        error(`Error in watcher: "${message}"`)
       })
 
     queueRescan()

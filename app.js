@@ -19,7 +19,7 @@ const PACKAGE = require('./package')
 const NAME = 'ms.App'
 process.title = NAME
 
-const app = async () => {
+async function app () {
   const {
     name
   } = PACKAGE
@@ -28,7 +28,9 @@ const app = async () => {
    *  Permit only one instance of the application
    */
   try {
-    const a = (await psList()).filter(({ name }) => name === NAME)
+    const a = (await psList())
+      .filter(({ name }) => name === NAME)
+
     if (a.length > 1) {
       const {
         pid: PID
@@ -70,13 +72,27 @@ const app = async () => {
     version
   } = PACKAGE
 
-  commander
-    .version(version, '-v, --version', 'Version')
-    .option('-o, --origin [origin]', 'Origin path of M3Us')
-    .option('-d, --destination [destination]', 'Destination path for M3Us')
-    .option('-s, --server [server]', 'Protocol, IP address or hostname, and port')
-    .option('-i, --ignore [ignore]', 'Glob pattern of files to ignore')
-    .parse(argv)
+  try {
+    commander
+      .version(version, '-v, --version', 'Version')
+      .exitOverride()
+      .requiredOption('-o, --origin [origin]', 'Origin path of M3Us')
+      .requiredOption('-d, --destination [destination]', 'Destination path for M3Us')
+      .requiredOption('-s, --server [server]', 'Protocol, IP address or hostname, and port')
+      .option('-i, --ignore [ignore]', 'Glob pattern of files to ignore')
+      .parse(argv)
+  } catch (e) {
+    const {
+      code
+    } = e
+
+    const error = debug('minimserver:commander:error')
+
+    if (code !== 'commander.missingMandatoryOptionValue') error(e)
+
+    error(`Halting application "${name}" in process ${pid}.`)
+    return
+  }
 
   const {
     origin = ORIGIN,

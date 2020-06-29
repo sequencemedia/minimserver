@@ -14,7 +14,7 @@
     "m3u",
     "m3u8"
   ],
-  "main": "app.js",
+  "main": "./app.js",
   "author": "Jonathan Perry for Sequence Media Limited <sequencemedia@sequencemedia.net>",
   "license": "MIT",
   "engines": {
@@ -29,13 +29,17 @@
     "url": "https://github.com/sequencemedia/minimserver/issues"
   },
   "scripts": {
+    "build": "npm run babel",
+    "build:watch": "npm run babel:watch",
+    "clean": "rimraf lib",
     "babel": "babel src -d lib",
+    "babel:watch": "npm run babel -- -w",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "start": "cross-env DEBUG=minimserver*,itunes* NODE_ENV=production node app",
     "start:dev": "cross-env DEBUG=minimserver*,itunes* NODE_ENV=development node app",
-    "build": "npm run babel",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "prebuild": "npm run clean"
   },
   "dependencies": {
     "anymatch": "^3.1.1",
@@ -47,7 +51,7 @@
     "dotenv": "^8.2.0",
     "fs-extra": "^9.0.1",
     "ps-list": "^7.2.0",
-    "sacred-fs": "^1.0.15",
+    "sacred-fs": "^1.0.17",
     "supports-color": "^7.1.0"
   },
   "devDependencies": {
@@ -65,9 +69,10 @@
     "eslint": "^7.3.1",
     "eslint-config-standard": "^14.1.1",
     "eslint-import-resolver-babel-module": "^5.1.2",
-    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.0.1",
+    "rimraf": "^3.0.2"
   }
 }
