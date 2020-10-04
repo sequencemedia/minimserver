@@ -62,7 +62,8 @@ async function app () {
       ORIGIN,
       DESTINATION,
       SERVER,
-      IGNORE
+      IGNORE,
+      BOUNCE
     }
   } = process
 
@@ -80,6 +81,7 @@ async function app () {
       .requiredOption('-d, --destination [destination]', 'Destination path for M3Us')
       .requiredOption('-s, --server [server]', 'Protocol, IP address or hostname, and port')
       .option('-i, --ignore [ignore]', 'Glob pattern of files to ignore')
+      .option('-b, --bounce [bounce]', 'Bounce after delay (in milliseconds)')
       .parse(argv)
   } catch (e) {
     const {
@@ -98,18 +100,20 @@ async function app () {
     origin = ORIGIN,
     destination = DESTINATION,
     server = SERVER,
-    ignore = IGNORE
+    ignore = IGNORE,
+    bounce = BOUNCE
   } = commander
 
   log({
     origin,
     destination,
     server,
-    ...(ignore ? { ignore } : {})
+    ...(ignore ? { ignore } : {}),
+    ...(bounce ? { bounce } : {})
   })
 
   try {
-    await execute(origin, destination, server, ignore)
+    await execute(origin, destination, server, ignore, bounce)
   } catch ({ message }) {
     const error = debug('minimserver:execute:error')
 

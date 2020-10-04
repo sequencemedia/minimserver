@@ -178,7 +178,7 @@ export function removeFactory (origin, destination) {
   }
 }
 
-export function queueRescanFactory (server) {
+export function queueRescanFactory (server, bounce) {
   /*
    *  log('queueRescanFactory')
    */
@@ -220,11 +220,11 @@ export function queueRescanFactory (server) {
       } catch ({ message }) {
         error(message)
       }
-    }, 9999)
+    }, bounce)
   }
 }
 
-export function queueRestartFactory (server) {
+export function queueRestartFactory (server, bounce) {
   /*
    *  log('queueRestartFactory')
    */
@@ -266,11 +266,11 @@ export function queueRestartFactory (server) {
       } catch ({ message }) {
         error(message)
       }
-    }, 9999)
+    }, bounce)
   }
 }
 
-export function queueRelaunchFactory (server) {
+export function queueRelaunchFactory (server, bounce) {
   /*
    *  log('queueRelaunchFactory')
    */
@@ -312,7 +312,7 @@ export function queueRelaunchFactory (server) {
       } catch ({ message }) {
         error(message)
       }
-    }, 9999)
+    }, bounce)
   }
 }
 
@@ -328,7 +328,8 @@ export async function execute (
   origin = '.',
   destination = '.',
   server = 'http://0.0.0.0:9790',
-  ignore = ''
+  ignore = '',
+  bounce = 60000
 ) {
   /*
    * log('execute')
@@ -352,7 +353,7 @@ export async function execute (
     await ensureDestinationDir(d)
     await removeAllM3UFromDestinationDir(d)
 
-    const queueRescan = queueRescanFactory(server)
+    const queueRescan = queueRescanFactory(server, bounce)
 
     watcher
       .on('add', async function handleAdd (filePath) {
