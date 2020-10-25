@@ -44,7 +44,7 @@
   "dependencies": {
     "anymatch": "^3.1.1",
     "chokidar": "^3.4.3",
-    "commander": "^6.1.0",
+    "commander": "^6.2.0",
     "cross-env": "^7.0.2",
     "debug": "^4.2.0",
     "del": "^6.0.0",
