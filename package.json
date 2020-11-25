@@ -52,11 +52,11 @@
     "fs-extra": "^9.0.1",
     "ps-list": "^7.2.0",
     "sacred-fs": "^1.2.1",
-    "supports-color": "^7.2.0"
+    "supports-color": "^8.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.8",
-    "@babel/core": "^7.12.8",
+    "@babel/core": "^7.12.9",
     "@babel/eslint-parser": "^7.12.1",
     "@babel/plugin-proposal-export-default-from": "^7.12.1",
     "@babel/plugin-proposal-export-namespace-from": "^7.12.1",
