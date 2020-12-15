@@ -52,7 +52,7 @@
     "fs-extra": "^9.0.1",
     "ps-list": "^7.2.0",
     "sacred-fs": "^1.2.1",
-    "supports-color": "^8.0.0"
+    "supports-color": "^8.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
