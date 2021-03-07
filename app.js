@@ -102,7 +102,7 @@ async function app () {
     server = SERVER,
     ignore = IGNORE,
     bounce = BOUNCE
-  } = commander
+  } = commander.opts()
 
   log({
     origin,
