@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-require('@babel/register')
-
 require('dotenv/config')
 
 const debug = require('debug')
@@ -10,7 +8,7 @@ const psList = require('ps-list')
 
 const {
   execute
-} = require('./src')
+} = require('./lib')
 
 const commander = require('commander')
 
