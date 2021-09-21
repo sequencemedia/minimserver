@@ -12,7 +12,7 @@ import {
 import {
   stat,
   copyFile
-} from 'sacred-fs'
+} from 'fs/promises'
 
 import chokidar from 'chokidar'
 import anymatch from 'anymatch'
@@ -112,7 +112,9 @@ export function createFactory (origin, destination) {
 
     try {
       await ensureDestinationM3U(to)
-      return copyFile(filePath, to)
+      return (
+        await copyFile(filePath, to)
+      )
     } catch (e) {
       const {
         code
@@ -142,7 +144,9 @@ export function changeFactory (origin, destination) {
 
     try {
       await ensureDestinationM3U(to)
-      return copyFile(filePath, to)
+      return (
+        await copyFile(filePath, to)
+      )
     } catch (e) {
       const {
         code

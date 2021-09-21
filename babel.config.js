@@ -12,6 +12,7 @@ const presets = [
 ]
 
 const plugins = [
+  '@babel/transform-runtime',
   '@babel/proposal-export-default-from',
   '@babel/proposal-export-namespace-from',
   'syntax-async-functions',

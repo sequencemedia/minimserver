@@ -42,6 +42,7 @@
     "prebuild": "npm run clean"
   },
   "dependencies": {
+    "@babel/runtime": "^7.15.4",
     "anymatch": "^3.1.2",
     "chokidar": "^3.5.2",
     "commander": "^8.2.0",
@@ -60,15 +61,18 @@
     "@babel/eslint-parser": "^7.15.7",
     "@babel/plugin-proposal-export-default-from": "^7.14.5",
     "@babel/plugin-proposal-export-namespace-from": "^7.14.5",
-    "@babel/polyfill": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.15.0",
     "@babel/preset-env": "^7.15.6",
     "@babel/register": "^7.15.3",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-syntax-async-functions": "^6.13.0",
     "core-js": "^3.18.0",
     "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
     "eslint-import-resolver-babel-module": "^5.3.1",
-    "rimraf": "^3.0.2",
-    "standard": "^16.0.3"
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "rimraf": "^3.0.2"
   }
 }
