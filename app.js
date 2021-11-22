@@ -14,6 +14,10 @@ const commander = require('commander')
 
 const PACKAGE = require('./package')
 
+const log = debug('minimserver')
+
+log('`minimserver` is awake')
+
 const NAME = 'ms.App'
 process.title = NAME
 
@@ -50,8 +54,6 @@ async function app () {
     error(message)
     return
   }
-
-  const log = debug('minimserver:log')
 
   const {
     pid,

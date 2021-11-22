@@ -21,7 +21,9 @@ import del from 'del'
 import debug from 'debug'
 
 const error = debug('minimserver:error')
-const log = debug('minimserver:log')
+const log = debug('minimserver')
+
+log('`minimserver` is awake')
 
 async function originDirExists (path) {
   try {
@@ -43,19 +45,34 @@ async function originDirExists (path) {
   }
 }
 
-const removeAllM3UFromDestinationDir = async (path) => del(path, { force: true })
+export async function removeAllM3UFromDestinationDir (path) {
+  /**
+   *  log('removeAllM3UFromDestinationDir')
+   */
+  return await del(path, { force: true })
+}
 
-const ensureDestinationDir = (path) => (
-  new Promise((resolve, reject) => {
-    ensureDir(path, (e) => (!e) ? resolve() : reject(e))
-  })
-)
+export function ensureDestinationDir (path) {
+  /*
+   *  log('ensureDestinationDir')
+   */
+  return (
+    new Promise((resolve, reject) => {
+      ensureDir(path, (e) => (!e) ? resolve() : reject(e))
+    })
+  )
+}
 
-const ensureDestinationM3U = (filePath) => (
-  new Promise((resolve, reject) => {
-    ensureFile(filePath, (e) => (!e) ? resolve() : reject(e))
-  })
-)
+export function ensureDestinationM3U (filePath) {
+  /*
+   *  log('ensureDestinationM3U')
+   */
+  return (
+    new Promise((resolve, reject) => {
+      ensureFile(filePath, (e) => (!e) ? resolve() : reject(e))
+    })
+  )
+}
 
 export function rescan (server) {
   /*
@@ -175,7 +192,7 @@ export function removeFactory (origin, destination) {
     log('remove', to)
 
     try {
-      return del(to, { force: true })
+      return await del(to, { force: true })
     } catch ({ message }) {
       error(message)
     }
@@ -387,7 +404,7 @@ export async function execute (
           error(message)
         }
       })
-      .on('error', ({ message }) => {
+      .on('error', function handleError ({ message }) {
         error(`Error in watcher: "${message}"`)
       })
 

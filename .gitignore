@@ -15,14 +15,9 @@
 
 # Production
 .env
-app.sh
-.npmrc
 
 # Execution
 bin
-
-# Build
-# lib
 
 # User-defined NPM configuration
 .npmrc

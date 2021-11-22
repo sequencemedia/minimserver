@@ -4,7 +4,7 @@ const presets = [
     {
       useBuiltIns: 'usage',
       targets: {
-        node: '12.9.0'
+        node: 'current'
       },
       corejs: 3
     }
