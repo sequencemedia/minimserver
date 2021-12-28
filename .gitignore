@@ -16,9 +16,6 @@
 # Production
 .env
 
-# Execution
-bin
-
 # User-defined NPM configuration
 .npmrc
 

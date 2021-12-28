@@ -1,6 +1,6 @@
 {
   "name": "@sequencemedia/minimserver",
-  "version": "0.1.27",
+  "version": "1.1.27",
   "description": "Watch for changes to M3Us and rescan MinimServer",
   "keywords": [
     "minimserver",
@@ -14,7 +14,7 @@
     "m3u",
     "m3u8"
   ],
-  "main": "./app.js",
+  "main": "./app.mjs",
   "author": "Jonathan Perry for Sequence Media Limited <sequencemedia@sequencemedia.net>",
   "license": "MIT",
   "engines": {
@@ -29,20 +29,12 @@
     "url": "https://github.com/sequencemedia/minimserver/issues"
   },
   "scripts": {
-    "build": "npm run babel",
-    "build:watch": "npm run babel:watch",
-    "clean": "rimraf lib",
-    "babel": "babel src -d lib",
-    "babel:watch": "npm run babel -- -w",
-    "lint": "eslint .",
+    "lint": "eslint . --ext .mjs --ext .cjs",
     "lint:fix": "npm run lint -- --fix",
-    "start": "cross-env DEBUG=minimserver*,itunes* NODE_ENV=production node app",
-    "start:dev": "cross-env DEBUG=minimserver*,itunes* NODE_ENV=development node app",
-    "prepublishOnly": "npm run build",
-    "prebuild": "npm run clean"
+    "start": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=production node .",
+    "dev": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=development node ."
   },
   "dependencies": {
-    "@babel/runtime": "^7.16.5",
     "anymatch": "^3.1.2",
     "chokidar": "^3.5.2",
     "commander": "^8.3.0",
@@ -51,27 +43,22 @@
     "del": "^6.0.0",
     "dotenv": "^10.0.0",
     "fs-extra": "^10.0.0",
-    "ps-list": "7.2.0",
+    "ps-list": "^8.0.0",
     "supports-color": "^9.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.5",
     "@babel/eslint-parser": "^7.16.5",
-    "@babel/plugin-proposal-export-default-from": "^7.16.5",
-    "@babel/plugin-proposal-export-namespace-from": "^7.16.5",
-    "@babel/plugin-transform-runtime": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
-    "@babel/register": "^7.16.5",
-    "babel-plugin-module-resolver": "^4.1.0",
-    "babel-plugin-syntax-async-functions": "^6.13.0",
     "core-js": "^3.20.1",
     "eslint": "7.32.0",
     "eslint-config-standard": "^16.0.3",
-    "eslint-import-resolver-babel-module": "^5.3.1",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "5.2.0",
-    "rimraf": "^3.0.2"
+    "eslint-plugin-promise": "5.2.0"
+  },
+  "imports": {
+    "#minimserver": "./src/index.mjs"
   }
 }

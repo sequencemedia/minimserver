@@ -9,10 +9,5 @@
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
-  },
-  "settings": {
-    "import/resolver": {
-      "babel-module": {}
-    }
   }
 }

@@ -1,13 +1,12 @@
+import debug from 'debug'
+
 import os from 'os'
 import path from 'path'
 import {
   exec
 } from 'child_process'
 
-import {
-  ensureDir,
-  ensureFile
-} from 'fs-extra'
+import fsExtra from 'fs-extra'
 
 import {
   stat,
@@ -18,10 +17,13 @@ import chokidar from 'chokidar'
 import anymatch from 'anymatch'
 import del from 'del'
 
-import debug from 'debug'
+const {
+  ensureDir,
+  ensureFile
+} = fsExtra
 
-const error = debug('minimserver:error')
-const log = debug('minimserver')
+const error = debug('@sequencemedia/minimserver:error')
+const log = debug('@sequencemedia/minimserver')
 
 log('`minimserver` is awake')
 
@@ -49,7 +51,9 @@ export async function removeAllM3UFromDestinationDir (path) {
   /**
    *  log('removeAllM3UFromDestinationDir')
    */
-  return await del(path, { force: true })
+  return (
+    await del(path, { force: true })
+  )
 }
 
 export function ensureDestinationDir (path) {
@@ -192,7 +196,9 @@ export function removeFactory (origin, destination) {
     log('remove', to)
 
     try {
-      return await del(to, { force: true })
+      return (
+        await del(to, { force: true })
+      )
     } catch ({ message }) {
       error(message)
     }
@@ -345,7 +351,7 @@ export function ignorePatternFactory (ignore) {
   }
 }
 
-export async function execute (
+export default async function execute (
   origin = '.',
   destination = '.',
   server = 'http://0.0.0.0:9790',

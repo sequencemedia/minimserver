@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
-require('dotenv/config')
+import 'dotenv/config'
 
-const debug = require('debug')
+import debug from 'debug'
 
-const psList = require('ps-list')
+import {
+  readFile
+} from 'fs/promises'
 
-const {
-  execute
-} = require('./lib')
+import psList from 'ps-list'
 
-const commander = require('commander')
+import commander from 'commander'
 
-const PACKAGE = require('./package')
+import execute from '#minimserver'
 
-const log = debug('minimserver')
+const log = debug('@sequencemedia/minimserver')
 
 log('`minimserver` is awake')
 
@@ -22,6 +22,8 @@ const NAME = 'ms.App'
 process.title = NAME
 
 async function app () {
+  const PACKAGE = JSON.parse(await readFile('./package.json', 'utf8'))
+
   const {
     name
   } = PACKAGE
@@ -42,14 +44,14 @@ async function app () {
         pid
       } = a.find(({ pid }) => pid !== PID)
 
-      const log = debug('minimserver:process:log')
+      const log = debug('@sequencemedia/minimserver:process:log')
 
       log(`Killing application "${name}" in process ${pid}.`)
 
       process.kill(pid)
     }
   } catch ({ message }) {
-    const error = debug('minimserver:process:error')
+    const error = debug('@sequencemedia/minimserver:process:error')
 
     error(message)
     return
@@ -88,7 +90,7 @@ async function app () {
       code
     } = e
 
-    const error = debug('minimserver:commander:error')
+    const error = debug('@sequencemedia/minimserver:commander:error')
 
     if (code !== 'commander.missingMandatoryOptionValue') error(e)
 
@@ -115,10 +117,10 @@ async function app () {
   try {
     await execute(origin, destination, server, ignore, bounce)
   } catch ({ message }) {
-    const error = debug('minimserver:execute:error')
+    const error = debug('@sequencemedia/minimserver:execute:error')
 
     error(message)
   }
 }
 
-module.exports = app()
+export default app()
