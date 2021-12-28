@@ -30,8 +30,8 @@ function use (key) {
   }
 }
 
-function getGitRemoteShowOrigin () {
-  log('getGitRemoteShowOrigin')
+function getGitRemoteShowOriginHeadBranch () {
+  log('getGitRemoteShowOriginHeadBranch')
 
   return (
     new Promise((resolve, reject) => {
@@ -42,8 +42,8 @@ function getGitRemoteShowOrigin () {
         stderr
       } = exec(command, OPTIONS, (e, v = '') => (!e) ? resolve(trim(v)) : reject(e))
 
-      stdout.on('data', use('git-remote-show-origin'))
-      stderr.on('data', use('git-remote-show-origin'))
+      stdout.on('data', use('git-remote-show-origin-head-branch'))
+      stderr.on('data', use('git-remote-show-origin-head-branch'))
     })
   )
 }
@@ -133,7 +133,7 @@ export default async function preCommit () {
       /**
        *  Not package version changes, continue
        */
-      if (await notPackageVersionChanges(await getGitRemoteShowOrigin())) {
+      if (await notPackageVersionChanges(await getGitRemoteShowOriginHeadBranch())) {
         await patchPackageVersion()
         await addPackageVersionChanges()
       }
