@@ -61,9 +61,6 @@ async function app () {
     pid,
     argv,
     env: {
-      ORIGIN,
-      DESTINATION,
-      SERVER,
       IGNORE,
       BOUNCE
     }
@@ -99,9 +96,9 @@ async function app () {
   }
 
   const {
-    origin = ORIGIN,
-    destination = DESTINATION,
-    server = SERVER,
+    origin,
+    destination,
+    server,
     ignore = IGNORE,
     bounce = BOUNCE
   } = commander.opts()
