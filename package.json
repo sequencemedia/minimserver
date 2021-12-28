@@ -32,7 +32,10 @@
     "lint": "eslint . --ext .mjs --ext .cjs",
     "lint:fix": "npm run lint -- --fix",
     "start": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=production node .",
-    "dev": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=development node ."
+    "dev": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=development node .",
+    "gulp": "gulp --color",
+    "pre-commit": "npm run lint && npm run gulp -- pre-commit",
+    "prepare": "husky install"
   },
   "dependencies": {
     "anymatch": "^3.1.2",
@@ -56,7 +59,9 @@
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "5.2.0"
+    "eslint-plugin-promise": "5.2.0",
+    "gulp": "^4.0.2",
+    "husky": "^7.0.4"
   },
   "imports": {
     "#minimserver": "./src/index.mjs"
