@@ -24,14 +24,14 @@ const BRANCH = 'master'
 const trim = (v) => v.split('\n').map((v) => v.trimEnd()).join('\n').trim()
 
 function use (key) {
-  const log = debug(`@modernpoacher/deps:${key}`)
+  const log = debug(`@sequencemedia/minimserver:${key}`)
 
   return function use (v) {
     log(trim(v))
   }
 }
 
-function getGitRemoteShowOriginHeadBranch () {
+export function getGitRemoteShowOriginHeadBranch () {
   log('getGitRemoteShowOriginHeadBranch')
 
   return (

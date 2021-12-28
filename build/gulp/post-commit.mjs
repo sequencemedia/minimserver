@@ -18,6 +18,8 @@ const error = debug('@sequencemedia/minimserver:build:gulp:post-commit:error')
 log('`@sequencemedia/minimserver` is awake')
 
 export async function getPackageVersion () {
+  log('getPackageVersion')
+
   const {
     version = '0.0.0'
   } = JSON.parse(await readFile('./package.json', 'utf8'))
@@ -26,7 +28,7 @@ export async function getPackageVersion () {
 }
 
 export function gitTag (a = '0.0.0', m = `v${a}`) {
-  log('hasStagedChanges')
+  log('gitTag')
 
   return (
     new Promise((resolve, reject) => {
