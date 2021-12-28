@@ -5,6 +5,7 @@ import {
 } from 'child_process'
 
 const log = debug('@sequencemedia/minimserver:build:gulp:pre-commit')
+const error = debug('@sequencemedia/minimserver:build:gulp:pre-commit:error')
 
 log('`@sequencemedia/minimserver` is awake')
 
@@ -139,6 +140,6 @@ export default async function preCommit () {
       }
     }
   } catch ({ code = 'NONE', message = 'No error message defined' }) {
-    log({ code, message })
+    error({ code, message })
   }
 }

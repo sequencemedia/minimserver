@@ -1,6 +1,6 @@
 {
   "name": "@sequencemedia/minimserver",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Watch for changes to M3Us and rescan MinimServer",
   "keywords": [
     "minimserver",
@@ -35,6 +35,7 @@
     "dev": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=development node .",
     "gulp": "gulp --color",
     "pre-commit": "npm run lint && cross-env DEBUG=@sequencemedia/minimserver,@sequencemedia/minimserver:* npm run gulp -- pre-commit",
+    "post-commit": "cross-env DEBUG=@sequencemedia/minimserver,@sequencemedia/minimserver:* npm run gulp -- post-commit",
     "prepare": "husky install"
   },
   "dependencies": {
