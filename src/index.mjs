@@ -351,7 +351,7 @@ export function ignorePatternFactory (ignore) {
   }
 }
 
-export default async function execute (
+export default async function minimServer (
   origin = '.',
   destination = '.',
   server = 'http://0.0.0.0:9790',
@@ -359,7 +359,7 @@ export default async function execute (
   bounce = 60000
 ) {
   /*
-   * log('execute')
+   * log('minimServer')
    */
   let watcher
 

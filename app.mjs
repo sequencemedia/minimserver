@@ -12,7 +12,7 @@ import psList from 'ps-list'
 
 import commander from 'commander'
 
-import execute from '#minimserver'
+import minimServer from '#minimserver'
 
 const log = debug('@sequencemedia/minimserver')
 
@@ -44,7 +44,7 @@ async function app () {
         pid
       } = a.find(({ pid }) => pid !== PID)
 
-      const log = debug('@sequencemedia/minimserver:process:log')
+      const log = debug('@sequencemedia/minimserver:process')
 
       log(`Killing application "${name}" in process ${pid}.`)
 
@@ -115,9 +115,9 @@ async function app () {
   })
 
   try {
-    await execute(origin, destination, server, ignore, bounce)
+    await minimServer(origin, destination, server, ignore, bounce)
   } catch ({ message }) {
-    const error = debug('@sequencemedia/minimserver:execute:error')
+    const error = debug('@sequencemedia/minimserver:error')
 
     error(message)
   }
