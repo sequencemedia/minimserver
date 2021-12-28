@@ -134,9 +134,8 @@ export default async function preCommit () {
        *  Not package version changes, continue
        */
       if (await notPackageVersionChanges(await getGitRemoteShowOrigin())) {
-        // await patchPackageVersion()
-        // await addPackageVersionChanges()
-        console.log('yep')
+        await patchPackageVersion()
+        await addPackageVersionChanges()
       }
     }
   } catch ({ code = 'NONE', message = 'No error message defined' }) {
