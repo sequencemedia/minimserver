@@ -18,47 +18,105 @@ const OPTIONS = {
   maxBuffer: 1024 * 500
 }
 
-export const hasPackageVersionChanges = () => (
-  new Promise((resolve, reject) => {
-    exec('git diff HEAD origin/master package.json', OPTIONS, (e, v) => (!e) ? resolve(PACKAGE_VERSION_CHANGES.test(v)) : reject(e))
-  })
-)
+const BRANCH = 'master'
 
-export const notPackageVersionChanges = () => (
-  new Promise((resolve, reject) => {
-    exec('git diff HEAD origin/master package.json', OPTIONS, (e, v) => (!e) ? resolve(PACKAGE_VERSION_CHANGES.test(v) !== true) : reject(e))
-  })
-)
+const trim = (v) => v.split('\n').map((v) => v.trimEnd()).join('\n').trim()
 
-export const hasStagedChanges = () => (
-  new Promise((resolve, reject) => {
-    exec('git status', OPTIONS, (e, v) => (!e) ? resolve(HAS_STAGED_CHANGES.test(v)) : reject(e))
-  })
-)
+function use (key) {
+  const log = debug(`@modernpoacher/deps:${key}`)
 
-export const notStagedChanges = () => (
-  new Promise((resolve, reject) => {
-    exec('git status', OPTIONS, (e, v) => (!e) ? resolve(NOT_STAGED_CHANGES.test(v)) : reject(e))
-  })
-)
+  return function use (v) {
+    log(trim(v))
+  }
+}
 
-export const notPushedChanges = () => (
-  new Promise((resolve, reject) => {
-    exec('git log origin/master..HEAD', OPTIONS, (e, v) => (!e) ? resolve(!!v) : reject(e))
-  })
-)
+function getGitRemoteShowOrigin () {
+  log('getGitRemoteShowOrigin')
 
-export const patchPackageVersion = () => (
-  new Promise((resolve, reject) => {
-    exec('npm version patch -m %s -n --no-git-tag-version --no-verify', OPTIONS, (e) => (!e) ? resolve() : reject(e))
-  })
-)
+  return (
+    new Promise((resolve, reject) => {
+      const command = 'git remote show origin | awk \'/HEAD branch/ {print $NF}\''
 
-export const addPackageVersionChanges = () => (
-  new Promise((resolve, reject) => {
-    exec('git add package.json package-lock.json', OPTIONS, (e) => (!e) ? resolve() : reject(e))
-  })
-)
+      const {
+        stdout,
+        stderr
+      } = exec(command, OPTIONS, (e, v = '') => (!e) ? resolve(trim(v)) : reject(e))
+
+      stdout.on('data', use('git-remote-show-origin'))
+      stderr.on('data', use('git-remote-show-origin'))
+    })
+  )
+}
+
+export function hasPackageVersionChanges (branch = BRANCH) {
+  log('hasPackageVersionChanges')
+
+  return (
+    new Promise((resolve, reject) => {
+      exec(`git diff HEAD origin/${branch} package.json`, OPTIONS, (e, v) => (!e) ? resolve(PACKAGE_VERSION_CHANGES.test(v)) : reject(e))
+    })
+  )
+}
+
+export function notPackageVersionChanges (branch = BRANCH) {
+  log('notPackageVersionChanges')
+
+  return (
+    new Promise((resolve, reject) => {
+      exec(`git diff HEAD origin/${branch} package.json`, OPTIONS, (e, v) => (!e) ? resolve(PACKAGE_VERSION_CHANGES.test(v) !== true) : reject(e))
+    })
+  )
+}
+
+export function hasStagedChanges () {
+  log('hasStagedChanges')
+
+  return (
+    new Promise((resolve, reject) => {
+      exec('git status', OPTIONS, (e, v) => (!e) ? resolve(HAS_STAGED_CHANGES.test(v)) : reject(e))
+    })
+  )
+}
+
+export function notStagedChanges () {
+  log('notStagedChanges')
+
+  return (
+    new Promise((resolve, reject) => {
+      exec('git status', OPTIONS, (e, v) => (!e) ? resolve(NOT_STAGED_CHANGES.test(v)) : reject(e))
+    })
+  )
+}
+
+export function notPushedChanges (branch = BRANCH) {
+  log('notPushedChanges')
+
+  return (
+    new Promise((resolve, reject) => {
+      exec(`git log origin/${branch}..HEAD`, OPTIONS, (e, v) => (!e) ? resolve(!!v) : reject(e))
+    })
+  )
+}
+
+export function patchPackageVersion () {
+  log('patchPackageVersion')
+
+  return (
+    new Promise((resolve, reject) => {
+      exec('npm version patch -m %s -n --no-git-tag-version --no-verify', OPTIONS, (e) => (!e) ? resolve() : reject(e))
+    })
+  )
+}
+
+export function addPackageVersionChanges () {
+  log('addPackageVersionChanges')
+
+  return (
+    new Promise((resolve, reject) => {
+      exec('git add package.json package-lock.json', OPTIONS, (e) => (!e) ? resolve() : reject(e))
+    })
+  )
+}
 
 export default async function preCommit () {
   log('pre-commit')
@@ -75,9 +133,10 @@ export default async function preCommit () {
       /**
        *  Not package version changes, continue
        */
-      if (await notPackageVersionChanges()) {
-        await patchPackageVersion()
-        await addPackageVersionChanges()
+      if (await notPackageVersionChanges(await getGitRemoteShowOrigin())) {
+        // await patchPackageVersion()
+        // await addPackageVersionChanges()
+        console.log('yep')
       }
     }
   } catch ({ code = 'NONE', message = 'No error message defined' }) {
