@@ -1,6 +1,6 @@
 {
   "name": "@sequencemedia/minimserver",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Watch for changes to M3Us and rescan MinimServer",
   "keywords": [
     "minimserver",
@@ -64,6 +64,7 @@
     "husky": "^7.0.4"
   },
   "imports": {
-    "#minimserver": "./src/index.mjs"
+    "#minimserver": "./src/index.mjs",
+    "#build/gulp/*": "./build/gulp/*.mjs"
   }
 }
