@@ -34,8 +34,8 @@
     "start": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=production node .",
     "dev": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=development node .",
     "gulp": "gulp --color",
-    "pre-commit": "npm run lint && cross-env DEBUG=@sequencemedia/minimserver,@sequencemedia/minimserver:* npm run gulp -- pre-commit",
-    "post-commit": "cross-env DEBUG=@sequencemedia/minimserver,@sequencemedia/minimserver:* npm run gulp -- post-commit",
+    "pre-commit": "npm run lint",
+    "post-commit": "cross-env DEBUG=@sequencemedia/hooks,@sequencemedia/hooks:* npm run gulp -- post-commit",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -47,14 +47,14 @@
     "del": "^6.0.0",
     "dotenv": "^10.0.0",
     "fs-extra": "^10.0.0",
-    "ps-list": "^8.0.0",
-    "supports-color": "^9.2.1"
+    "ps-list": "^8.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.5",
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
+    "@sequencemedia/hooks": "^1.0.0",
     "core-js": "^3.20.1",
     "eslint": "7.32.0",
     "eslint-config-standard": "^16.0.3",
