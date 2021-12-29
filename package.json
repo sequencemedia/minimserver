@@ -65,7 +65,6 @@
     "husky": "^7.0.4"
   },
   "imports": {
-    "#minimserver": "./src/index.mjs",
-    "#build/gulp/*": "./build/gulp/*.mjs"
+    "#minimserver": "./src/index.mjs"
   }
 }
