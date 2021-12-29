@@ -1,7 +1,13 @@
 import debug from 'debug'
 
-import os from 'os'
-import path from 'path'
+import {
+  homedir
+} from 'os'
+
+import {
+  resolve
+} from 'path'
+
 import {
   exec
 } from 'child_process'
@@ -364,11 +370,11 @@ export default async function minimServer (
   let watcher
 
   try {
-    const o = path.resolve(origin.replace('~', os.homedir))
+    const o = resolve(origin.replace('~', homedir()))
 
     if (!await originDirExists(o)) throw new Error(`Origin "${origin}" does not exist.`)
 
-    const d = path.resolve(destination.replace('~', os.homedir))
+    const d = resolve(destination.replace('~', homedir()))
     const ignorePattern = ignorePatternFactory(ignore)
 
     watcher = chokidar.watch(o, { ignored: ignorePattern })
