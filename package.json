@@ -51,10 +51,10 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.19.3",
-    "@babel/core": "^7.19.3",
+    "@babel/core": "^7.19.6",
     "@babel/eslint-parser": "^7.19.1",
     "@babel/preset-env": "^7.19.4",
-    "@sequencemedia/hooks": "^1.0.245",
+    "@sequencemedia/hooks": "^1.0.247",
     "core-js": "^3.25.5",
     "eslint": "^8.25.0",
     "eslint-config-standard": "^17.0.0",
