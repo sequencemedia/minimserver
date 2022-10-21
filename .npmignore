@@ -20,3 +20,5 @@
 
 # Deps
 .depsrc
+
+gulpfile.*
