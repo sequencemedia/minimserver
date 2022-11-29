@@ -46,12 +46,12 @@
     "debug": "^4.3.4",
     "del": "^7.0.0",
     "dotenv": "^16.0.3",
-    "fs-extra": "^10.1.0",
+    "fs-extra": "^11.0.0",
     "ps-list": "^8.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.19.3",
-    "@babel/core": "^7.20.2",
+    "@babel/core": "^7.20.5",
     "@babel/eslint-parser": "^7.19.1",
     "@babel/preset-env": "^7.20.2",
     "@sequencemedia/hooks": "^1.0.274",
