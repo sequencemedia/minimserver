@@ -46,7 +46,7 @@
     "debug": "^4.3.4",
     "del": "^7.0.0",
     "dotenv": "^16.0.3",
-    "fs-extra": "^10.1.0",
+    "fs-extra": "^11.1.0",
     "ps-list": "^8.1.0"
   },
   "devDependencies": {
