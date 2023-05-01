@@ -1,6 +1,6 @@
 {
   "name": "@sequencemedia/minimserver",
-  "version": "1.2.445",
+  "version": "1.2.446",
   "description": "Watch for changes to M3Us and rescan MinimServer",
   "keywords": [
     "minimserver",
