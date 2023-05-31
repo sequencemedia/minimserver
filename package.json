@@ -42,7 +42,7 @@
     "cross-env": "^7.0.3",
     "debug": "^4.3.4",
     "del": "^7.0.0",
-    "dotenv": "^16.1.1",
+    "dotenv": "^16.1.3",
     "fs-extra": "^11.1.1",
     "ps-list": "^8.1.1"
   },
@@ -51,7 +51,7 @@
     "@babel/core": "^7.22.1",
     "@babel/eslint-parser": "^7.21.8",
     "@babel/preset-env": "^7.22.4",
-    "@sequencemedia/hooks": "^1.0.427",
+    "@sequencemedia/hooks": "^1.0.428",
     "core-js": "^3.30.2",
     "eslint": "^8.41.0",
     "eslint-config-standard": "^17.1.0",
