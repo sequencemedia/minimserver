@@ -2,31 +2,31 @@ import debug from 'debug'
 
 import {
   homedir
-} from 'os'
+} from 'node:os'
 
 import {
   resolve
-} from 'path'
+} from 'node:path'
 
 import {
   exec
-} from 'child_process'
-
-import fsExtra from 'fs-extra'
+} from 'node:child_process'
 
 import {
   stat,
   copyFile
-} from 'fs/promises'
+} from 'node:fs/promises'
+
+import {
+  ensureDir,
+  ensureFile
+} from 'fs-extra'
 
 import chokidar from 'chokidar'
 import anymatch from 'anymatch'
-import del from 'del'
-
-const {
-  ensureDir,
-  ensureFile
-} = fsExtra
+import {
+  deleteAsync as del
+} from 'del'
 
 const error = debug('@sequencemedia/minimserver:error')
 const log = debug('@sequencemedia/minimserver')

@@ -6,13 +6,15 @@ import debug from 'debug'
 
 import {
   readFile
-} from 'fs/promises'
+} from 'node:fs/promises'
 
 import psList from 'ps-list'
 
-import commander from 'commander'
+import {
+  Command
+} from 'commander'
 
-import minimServer from '#minimserver'
+import minimServer from './src/index.mjs'
 
 const log = debug('@sequencemedia/minimserver')
 
@@ -20,6 +22,8 @@ log('`minimserver` is awake')
 
 const NAME = 'ms.App'
 process.title = NAME
+
+const commander = new Command()
 
 async function app () {
   const PACKAGE = JSON.parse(await readFile('./package.json', 'utf8'))
