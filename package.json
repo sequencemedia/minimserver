@@ -15,8 +15,8 @@
     "m3u8"
   ],
   "main": "./app.mjs",
-  "author": "Jonathan Perry for Sequence Media Limited <sequencemedia@sequencemedia.net>",
   "type": "module",
+  "author": "Jonathan Perry for Sequence Media Limited <sequencemedia@sequencemedia.net>",
   "license": "MIT",
   "engines": {
     "node": ">=18.5.0"
