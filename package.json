@@ -48,9 +48,9 @@
     "ps-list": "^8.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.5",
-    "@babel/eslint-parser": "^7.22.5",
-    "@babel/preset-env": "^7.22.5",
+    "@babel/core": "^7.22.6",
+    "@babel/eslint-parser": "^7.22.6",
+    "@babel/preset-env": "^7.22.6",
     "@sequencemedia/hooks": "^1.0.438",
     "core-js": "^3.31.0",
     "eslint": "^8.44.0",
