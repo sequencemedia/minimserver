@@ -38,7 +38,7 @@
     "lint:fix": "npm run lint -- --fix",
     "start": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=production node app.mjs",
     "dev": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=development node app.mjs",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "anymatch": "^3.1.3",
