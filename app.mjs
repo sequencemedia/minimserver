@@ -18,7 +18,7 @@ import minimServer from './src/index.mjs'
 
 const {
   env: {
-    DEBUG = 'sequencemedia/minimserver*'
+    DEBUG = '@sequencemedia/minimserver*'
   }
 } = process
 
