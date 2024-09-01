@@ -34,11 +34,11 @@
     "url": "https://github.com/sequencemedia/minimserver/issues"
   },
   "scripts": {
-    "dev": "cross-env DEBUG=@sequencemedia/minimserver* NODE_ENV=development node .",
+    "dev": "cross-env NODE_OPTIONS=\"--no-warnings\" NODE_ENV=development node .",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky",
-    "start": "cross-env NODE_ENV=production node ."
+    "start": "cross-env NODE_OPTIONS=\"--no-warnings\" NODE_ENV=production node ."
   },
   "dependencies": {
     "anymatch": "^3.1.3",
