@@ -375,9 +375,12 @@ export default async function minimServer (
     if (!await originDirExists(o)) throw new Error(`Origin "${origin}" does not exist.`)
 
     const d = resolve(destination.replace('~', homedir()))
-    const ignorePattern = (ignore && ignorePatternFactory(ignore))
 
-    watcher = chokidar.watch(o, { ignored: ignorePattern })
+    watcher = (
+      ignore
+        ? chokidar.watch(o, { ignored: ignorePatternFactory(ignore) })
+        : chokidar.watch(o)
+    )
 
     const create = createFactory(o, d)
     const change = changeFactory(o, d)
