@@ -16,6 +16,14 @@ import {
 
 import minimServer from './src/index.mjs'
 
+const {
+  env: {
+    DEBUG = 'sequencemedia/minimserver*'
+  }
+} = process
+
+if (DEBUG) debug.enable(DEBUG)
+
 const log = debug('@sequencemedia/minimserver')
 
 log('`minimserver` is awake')
