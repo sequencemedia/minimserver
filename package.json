@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/sequencemedia/minimserver"
+    "url": "git://github.com/sequencemedia/minimserver.git"
   },
   "homepage": "https://github.com/sequencemedia/minimserver",
   "bugs": {
