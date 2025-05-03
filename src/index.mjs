@@ -378,8 +378,8 @@ export default async function minimServer (
 
     watcher = (
       ignore
-        ? chokidar.watch(o, { ignored: ignorePatternFactory(ignore) })
-        : chokidar.watch(o)
+        ? chokidar.watch(o, { awaitWriteFinish: true, ignored: ignorePatternFactory(ignore) })
+        : chokidar.watch(o, { awaitWriteFinish: true })
     )
 
     const create = createFactory(o, d)
