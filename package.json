@@ -34,6 +34,7 @@
     "url": "https://github.com/sequencemedia/minimserver/issues"
   },
   "scripts": {
+    "kill-me-now": "cross-env NODE_OPTIONS=\"--no-warnings\" NODE_ENV=production node kill-me-now.mjs",
     "dev": "cross-env NODE_OPTIONS=\"--no-warnings\" NODE_ENV=development node .",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
@@ -49,15 +50,15 @@
     "del": "^8.0.0",
     "dotenv": "^16.5.0",
     "fs-extra": "^11.3.0",
-    "ps-list": "^8.1.1"
+    "kill-me-now": "^0.0.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/preset-env": "^7.27.2",
     "@sequencemedia/eslint-config-standard": "^0.2.56",
-    "core-js": "^3.42.0",
     "eslint": "^9.26.0",
     "globals": "^16.1.0",
     "husky": "^9.1.7"
+  },
+  "imports": {
+    "#where-am-i": "./where-am-i.mjs"
   }
 }

@@ -8,8 +8,6 @@ import {
   readFile
 } from 'node:fs/promises'
 
-import psList from 'ps-list'
-
 import {
   Command
 } from 'commander'
@@ -28,9 +26,6 @@ const log = debug('@sequencemedia/minimserver')
 
 log('`minimserver` is awake')
 
-const NAME = 'ms.App'
-process.title = NAME
-
 const commander = new Command()
 
 async function app () {
@@ -39,35 +34,6 @@ async function app () {
   const {
     name
   } = PACKAGE
-
-  /**
-   *  Permit only one instance of the application
-   */
-  try {
-    const a = (await psList())
-      .filter(({ name }) => name === NAME)
-
-    if (a.length > 1) {
-      const {
-        pid: PID
-      } = process
-
-      const {
-        pid
-      } = a.find(({ pid }) => pid !== PID)
-
-      const log = debug('@sequencemedia/minimserver:process')
-
-      log(`Killing application "${name}" in process ${pid}.`)
-
-      process.kill(pid)
-    }
-  } catch ({ message }) {
-    const error = debug('@sequencemedia/minimserver:process:error')
-
-    error(message)
-    return
-  }
 
   const {
     pid,
