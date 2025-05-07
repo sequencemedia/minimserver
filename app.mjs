@@ -2,8 +2,6 @@
 
 import 'dotenv/config'
 
-import debug from 'debug'
-
 import {
   readFile
 } from 'node:fs/promises'
@@ -12,15 +10,9 @@ import {
   Command
 } from 'commander'
 
+import debug from '#debug'
+
 import minimServer from './src/index.mjs'
-
-const {
-  env: {
-    DEBUG = '@sequencemedia/minimserver*'
-  }
-} = process
-
-if (DEBUG) debug.enable(DEBUG)
 
 const log = debug('@sequencemedia/minimserver')
 

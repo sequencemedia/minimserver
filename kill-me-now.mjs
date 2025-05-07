@@ -1,18 +1,10 @@
 #!/usr/bin/env node
 
-import debug from 'debug'
-
 import killMeNow from 'kill-me-now'
 
+import debug from '#debug'
+
 import hereIAm from '#where-am-i'
-
-const {
-  env: {
-    DEBUG = '@sequencemedia/minimserver*'
-  }
-} = process
-
-if (DEBUG) debug.enable(DEBUG)
 
 const {
   pid
