@@ -18,6 +18,10 @@ const log = debug('@sequencemedia/minimserver')
 
 log('`minimserver` is awake')
 
+const {
+  table
+} = console
+
 const commander = new Command()
 
 async function app () {
@@ -73,7 +77,7 @@ async function app () {
     bounce = BOUNCE
   } = commander.opts()
 
-  log({
+  table({
     origin,
     destination,
     server,
