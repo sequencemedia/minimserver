@@ -48,14 +48,14 @@
     "cross-env": "^10.1.0",
     "debug": "^4.4.3",
     "del": "^8.0.1",
-    "dotenv": "^17.4.1",
+    "dotenv": "^17.4.2",
     "fs-extra": "^11.3.4",
     "kill-me-now": "^0.0.133"
   },
   "devDependencies": {
     "@sequencemedia/eslint-config-standard": "^0.2.107",
     "eslint": "9.38.0",
-    "globals": "^17.4.0",
+    "globals": "^17.5.0",
     "husky": "^9.1.7"
   },
   "imports": {
