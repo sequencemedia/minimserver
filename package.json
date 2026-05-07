@@ -49,7 +49,7 @@
     "debug": "^4.4.3",
     "del": "^8.0.1",
     "dotenv": "^17.4.2",
-    "fs-extra": "^11.3.4",
+    "fs-extra": "^11.3.5",
     "kill-me-now": "^0.0.133"
   },
   "devDependencies": {
