@@ -38,7 +38,7 @@
     "kill-me-now": "cross-env NODE_OPTIONS=\"--no-warnings\" NODE_ENV=production node kill-me-now.mjs",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "prepare": "husky",
+    "prepare": "node husky.mjs",
     "start": "cross-env NODE_OPTIONS=\"--no-warnings\" NODE_ENV=production node ."
   },
   "dependencies": {
