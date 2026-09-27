@@ -48,9 +48,9 @@
     "cross-env": "^10.1.0",
     "debug": "^4.4.3",
     "del": "^8.0.1",
-    "dotenv": "^17.4.2",
-    "fs-extra": "^11.4.0",
-    "kill-me-now": "^0.0.157"
+    "dotenv": "^18.0.4",
+    "fs-extra": "^11.4.1",
+    "kill-me-now": "^0.0.158"
   },
   "devDependencies": {
     "@sequencemedia/eslint-config-standard": "^0.2.125",
