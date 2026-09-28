@@ -50,10 +50,10 @@
     "del": "^8.0.1",
     "dotenv": "^18.0.4",
     "fs-extra": "^11.4.1",
-    "kill-me-now": "^0.0.158"
+    "kill-me-now": "^0.0.159"
   },
   "devDependencies": {
-    "@sequencemedia/eslint-config-standard": "^0.2.125",
+    "@sequencemedia/eslint-config-standard": "^0.2.126",
     "eslint": "9.38.0",
     "globals": "^17.12.0",
     "husky": "^9.1.7"
